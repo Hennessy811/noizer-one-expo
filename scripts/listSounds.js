@@ -21,10 +21,10 @@ const getFiles = () => {
   return files;
 };
 
-const clearName = s => s.replace('_128', '').replace('_320', '').replace('_64', '').replace('.m4a', '');
+const clearName = s => s.replace('.mp3', '');
 
 const r = getFiles()
-  .filter(i => i.match(/\.m4a/))
+  .filter(i => i.match(/\.mp3/))
   .map(file => {
     const f = file.split('/audio/')[1];
 
@@ -37,6 +37,7 @@ const r = getFiles()
       path: `../assets/${f}`,
       variantName: clearName(variant),
       sound: clearName(sound),
+      asset: `require('../assets/audio/${f}')`,
     };
   });
 
@@ -55,8 +56,9 @@ fs.writeFileSync(
   path.join(__dirname, '../constants/sounds.ts'),
   `const sounds = ${JSON.stringify(
     orderedPaths.map(i => {
-      if (freeVariants.find(v => v.path === i.path)) return { ...i, free: true };
-      else return { ...i, free: false };
+      const { path, ...j } = i;
+      if (freeVariants.find(v => v.path === i.path)) return { ...j, free: true };
+      else return { ...j, free: false };
     }),
     null,
     2

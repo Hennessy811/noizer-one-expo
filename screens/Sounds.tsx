@@ -1,17 +1,13 @@
-import { Ionicons } from '@expo/vector-icons';
-import { entries, groupBy, pick } from 'lodash';
-import { Box, Text, Flex, Heading, ScrollView, HStack, Button, Icon, useDisclose, View, Divider, VStack } from 'native-base';
-import React, { useState } from 'react';
-import { Pressable } from 'react-native';
+import { entries, pick } from 'lodash';
+import { Box, Text, ScrollView, VStack, Column } from 'native-base';
+import React from 'react';
 import SoundItem from '../components/SoundItem';
-import TopNav from '../components/TopNav';
-import { ISoundItem } from '../constants/sounds';
-import useStore from '../store';
+import useStore, { StoredSound } from '../store';
 
-export type GroupedSounds = Record<string, Record<string, ISoundItem[]>>;
+export type GroupedSounds = Record<string, Record<string, StoredSound[]>>;
 
-const listSounds = (sounds: ISoundItem[]): GroupedSounds =>
-  sounds.reduce((result: Record<string, Record<string, ISoundItem[]>>, item) => {
+const listSounds = (sounds: StoredSound[]): GroupedSounds =>
+  sounds.reduce((result: Record<string, Record<string, StoredSound[]>>, item) => {
     // Get app object corresponding to current item from result (or insert if not present)
     const group = (result[item.group] = result[item.group] || {});
 
@@ -26,7 +22,7 @@ const listSounds = (sounds: ISoundItem[]): GroupedSounds =>
   }, {});
 
 const Sounds = () => {
-  const sounds = useStore(state => state.sounds);
+  const sounds = useStore(state => state.player.sounds);
   const groupedSounds = listSounds(sounds);
 
   return (
@@ -35,15 +31,15 @@ const Sounds = () => {
         <VStack>
           {entries(pick(groupedSounds, 'Locations', 'Background', 'Tweak', 'Color noise', 'Others', 'ASMR')).map(([group, items]) => (
             <Box key={group}>
-              <Text fontSize="3xl" mt={8} fontWeight="500" mb={4}>
+              <Text fontSize="3xl" mt={4} fontWeight="500" mb={2}>
                 {group}
               </Text>
 
-              <Box>
+              <Column space={3}>
                 {entries(items).map(([sound, variants]) => (
                   <SoundItem key={sound} name={sound} variants={variants} />
                 ))}
-              </Box>
+              </Column>
             </Box>
           ))}
         </VStack>

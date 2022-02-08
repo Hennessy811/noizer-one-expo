@@ -2,11 +2,8 @@ import 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import useCachedResources from './hooks/useCachedResources';
-import useColorScheme from './hooks/useColorScheme';
-import { Box, Button, Divider, Flex, Heading, HStack, Icon, NativeBaseProvider, ScrollView, Text, View, VStack } from 'native-base';
+import { extendTheme, NativeBaseProvider } from 'native-base';
 import { Entypo, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import Sounds from './screens/Sounds';
-import TopNav from './components/TopNav';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -23,15 +20,31 @@ const config = {
     'linear-gradient': LinearGradient,
   },
 };
+
+const theme = extendTheme({
+  colors: {
+    primary: {
+      50: '#e2fbf3',
+      100: '#c4eadc',
+      200: '#a2dbc4',
+      300: '#7fcbaa',
+      400: '#5dbc90',
+      500: '#43a27c',
+      600: '#327e66',
+      700: '#215a4d',
+      800: '#0f3730',
+      900: '#001510',
+    },
+  },
+});
 export default function App() {
   const isLoadingComplete = useCachedResources();
-  const colorScheme = useColorScheme();
 
   if (!isLoadingComplete) {
     return null;
   } else {
     return (
-      <NativeBaseProvider config={config}>
+      <NativeBaseProvider config={config} theme={theme}>
         <SafeAreaProvider>
           <StatusBar />
           <NavigationContainer>
@@ -39,9 +52,9 @@ export default function App() {
               screenOptions={({ route }) => ({
                 headerShown: false,
                 tabBarLabelStyle: {
-                  color: 'white',
+                  color: '#1c1917',
                 },
-                tabBarIcon: ({ focused, color, size }) => {
+                tabBarIcon: ({ color, size }) => {
                   switch (route.name) {
                     case 'Sounds':
                       return <Ionicons name="play" size={size} color={color} />;
@@ -56,10 +69,10 @@ export default function App() {
                       return <Ionicons name="code-slash-outline" size={size} color={color} />;
                   }
                 },
-                tabBarActiveTintColor: 'tomato',
+                tabBarActiveTintColor: '#43a27c',
                 tabBarInactiveTintColor: 'gray',
                 tabBarStyle: {
-                  backgroundColor: '#312e81',
+                  backgroundColor: 'primary.500',
                 },
               })}
             >
