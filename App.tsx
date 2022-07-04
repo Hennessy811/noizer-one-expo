@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useEffect } from 'react';
 import useCachedResources from './hooks/useCachedResources';
 import { extendTheme, NativeBaseProvider } from 'native-base';
 import { Entypo, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -12,6 +12,9 @@ import ZenScreen from './screens/ZenScreen';
 import { LinearGradient } from 'expo-linear-gradient';
 import PoolScreen from './screens/PoolScreen';
 import SettingsScreen from './screens/SettingsScreen';
+import useStore from './store';
+import { getSounds } from './constants/sounds';
+import { useAssets } from 'expo-asset';
 
 const Tab = createBottomTabNavigator();
 
@@ -39,6 +42,11 @@ const theme = extendTheme({
 });
 export default function App() {
   const isLoadingComplete = useCachedResources();
+  const { getSounds } = useStore(state => state.player);
+
+  useEffect(() => {
+    getSounds();
+  }, []);
 
   if (!isLoadingComplete) {
     return null;

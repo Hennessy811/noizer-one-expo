@@ -25,6 +25,8 @@ const Sounds = () => {
   const sounds = useStore(state => state.player.sounds);
   const groupedSounds = listSounds(sounds);
 
+  // console.log(groupedSounds, sounds);
+
   return (
     <Box pb={160}>
       <ScrollView>

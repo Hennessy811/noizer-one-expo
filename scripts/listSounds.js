@@ -34,10 +34,11 @@ const r = getFiles()
     return {
       group,
       icon,
-      path: `../assets/${f}`,
+      path: `../assets/audio/${f}`,
       variantName: clearName(variant),
       sound: clearName(sound),
       asset: `require('../assets/audio/${f}')`,
+      audio: `Audio.Sound.createAsync(require('../assets/audio/${f}')).then(({ sound }) => sound)`,
     };
   });
 
@@ -54,13 +55,23 @@ entries(groupBy(uniqPaths, 'sound')).forEach(([sound, files]) => {
 
 fs.writeFileSync(
   path.join(__dirname, '../constants/sounds.ts'),
-  `const sounds = ${JSON.stringify(
+  `
+import { ISoundItem } from '../store';
+import { Audio } from 'expo-av';
+
+  
+
+export const getSounds = async () => {
+  const sounds = ${JSON.stringify(
     orderedPaths.map(i => {
-      const { path, ...j } = i;
-      if (freeVariants.find(v => v.path === i.path)) return { ...j, free: true };
-      else return { ...j, free: false };
+      if (freeVariants.find(v => v.path === i.path)) return { ...i, free: true };
+      else return { ...i, free: false };
     }),
     null,
     2
-  )}; export default sounds;`
+  )} as ISoundItem[];
+
+  return sounds;
+};
+  `
 );

@@ -1,9 +1,7 @@
-// import FileSystem from 'expo-file-system';
-import { Audio } from 'expo-av';
-
 import { Actionsheet, Box, Pressable, Row, Text, useDisclose } from 'native-base';
 import React, { useState } from 'react';
 import useStore, { StoredSound } from '../store';
+import { Audio } from 'expo-av';
 
 interface Props {
   name: string;
@@ -36,21 +34,13 @@ const SoundItem = ({ variants, name }: Props) => {
 
   const playSound = async () => {
     // console.log('playSound', FileSystem.documentDirectory);
-    // if (sound) await sound.unloadAsync();
-    // else {
-    //   const { sound } = await Audio.Sound.createAsync(
-    //     {
-    //       // localUri: '../assets/audio/Locations/Basketball court_fa-basketball/Basketball game.mp3',
-    //       uri: '../assets/audio/Locations/Basketball court_fa-basketball/Basketball game.mp3',
-    //       type: 'mp3',
-    //     },
-    //     {
-    //       shouldPlay: true,
-    //       volume: 1,
-    //     }
-    //   );
-    //   setSound(sound);
-    // }
+    if (sound) await sound.unloadAsync();
+    else {
+      const s = activeVariant.audio;
+      console.log(s);
+
+      setSound(sound);
+    }
   };
 
   return (
